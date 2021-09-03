@@ -2,8 +2,9 @@
 
 namespace CogentHealth\Healthinsurance;
 
+use Illuminate\Support\ServiceProvider;
 
-class HealthInsuranceServiceProvider
+class HealthInsuranceServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
