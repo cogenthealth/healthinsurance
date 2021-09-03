@@ -3,9 +3,11 @@
 namespace CogentHealth\Healthinsurance;
 
 use App\Utils\Options;
+use CogentHealth\Healthinsurance\repository\HiInterface;
 use CogentHealth\Healthinsurance\services\HiAuthService;
+use GuzzleHttp\Client;
 
-class HealthInsurance implements \HiInterface
+class HealthInsurance implements HiInterface
 {
     protected static $message;
     protected static $success = true;
@@ -24,6 +26,9 @@ class HealthInsurance implements \HiInterface
      */
     private static $instance;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         self::$username = HiAuthService::getUsername();
@@ -44,6 +49,9 @@ class HealthInsurance implements \HiInterface
         self::$hiClient = new Client(self::$clientOptions);
     }
 
+    /**
+     * @return HealthInsurance|repository\json|Singleton|\json
+     */
     public static function init()
     {
         if (is_null(self::$instance)) {
@@ -52,6 +60,11 @@ class HealthInsurance implements \HiInterface
         return self::$instance;
     }
 
+    /**
+     * @param int $patientId
+     * @return repository\json|\Illuminate\Http\JsonResponse|\json
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public static function eligibilityRequest(int $patientId)
     {
         try {
@@ -80,6 +93,11 @@ class HealthInsurance implements \HiInterface
         return self::apiResponse();
     }
 
+    /**
+     * @param int $patientId
+     * @return repository\json|\Illuminate\Http\JsonResponse|\json
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public static function getPatientDetailById(int $patientId)
     {
         try {
@@ -106,5 +124,17 @@ class HealthInsurance implements \HiInterface
 
         self::$responseBody = $responseBody;
         return self::apiResponse();
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public static function apiResponse()
+    {
+        return response()->json([
+            'data' => self::$responseBody,
+            'message' => self::$message,
+            'success' => self::$success
+        ], self::$httpStatusCode);
     }
 }

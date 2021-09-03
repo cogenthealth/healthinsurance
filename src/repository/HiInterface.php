@@ -1,4 +1,5 @@
 <?php
+namespace CogentHealth\Healthinsurance\repository;
 
 interface HiInterface
 {
