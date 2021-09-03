@@ -1,0 +1,25 @@
+{
+    "name": "cogenthealth/healthinsurance",
+    "description": "Health insurance integration package",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Cogenthealth\\Healthinsurance\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CogentHealth\\Healthinsurance\\HealthInsuranceServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "Sujan Karki",
+            "email": "regolithsjk@gmail.com"
+        }
+    ],
+    "require": {}
+}
