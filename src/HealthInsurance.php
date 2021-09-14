@@ -33,18 +33,18 @@ class HealthInsurance implements HiInterface
     {
         self::$username = HiAuthService::getUsername();
         self::$password = HiAuthService::getPassword();
-        self::$hostName =env("HI_API_URL")?env("HI_API_URL"):Options::get('hi_settings')['hi_url']??'';
+        self::$hostName = env("HI_API_URL") ? env("HI_API_URL") : Options::get('hi_settings')['hi_url'] ?? '';
 
         self::$clientOptions = [
-            'verify' => false,
+//            'verify' => false,
             'auth' => [
                 self::$username,
                 self::$password
             ],
             'headers' => [
-                'remote-user' => Options::get('hi_settings')['hi_remote_user']??''
+                'remote-user' => Options::get('hi_settings')['hi_remote_user'] ?? ''
             ],
-            'base_uri' =>self::$hostName
+            'base_uri' => self::$hostName
         ];
         self::$hiClient = new Client(self::$clientOptions);
     }
@@ -65,13 +65,22 @@ class HealthInsurance implements HiInterface
      * @return repository\json|\Illuminate\Http\JsonResponse|\json
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function eligibilityRequest(int $patientId)
+    public static function eligibilityRequest($patientId)
     {
         try {
             self::init();
+            $request_body = [
+                "resourceType" => "EligibilityRequest",
+                "patient" => [
+                    "reference" => "Patient/" . $patientId
+                ]
+            ];
 
-            $response = self::$hiClient->get(
-                config('hi_api_url.patient') . "?identifier=" . $patientId
+            $response = self::$hiClient->post(
+                config('hi_api_url.EligibilityRequest'),
+                [
+                    'json' => $request_body
+                ]
             );
 
             self::$httpStatusCode = $response->getStatusCode();
@@ -98,7 +107,7 @@ class HealthInsurance implements HiInterface
      * @return repository\json|\Illuminate\Http\JsonResponse|\json
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function getPatientDetailById(int $patientId)
+    public static function getPatientDetailById($patientId)
     {
         try {
             self::init();
