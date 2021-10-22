@@ -113,7 +113,7 @@ class HealthInsurance implements HiInterface
             self::init();
 
             $response = self::$hiClient->get(
-                config('hi_api_url.patient') . "?identifier=" . $patientId
+                config('hi_api_url.Patient') . "?identifier=" . $patientId
             );
 
             self::$httpStatusCode = $response->getStatusCode();
